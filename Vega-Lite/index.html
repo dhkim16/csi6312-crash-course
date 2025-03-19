@@ -4,6 +4,9 @@
     <script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
+
+    <!-- For Vega-Lite API -->
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite-api@5"></script>
   </head>
   <body>
     <!-- Container for the visualization -->
@@ -26,7 +29,6 @@
       vegaEmbed('#vis', vlSpec);
     </script>
 
-
     <div id="vis2"></div>
     <script>
       // Method 2 -- include the spec in a separate file
@@ -34,6 +36,27 @@
 
       // Simply use the vegaEmbed function!
       vegaEmbed('#vis2', vlSpec2);
+    </script>
+
+
+    <div id="vis3"></div>
+    <script>
+        // Method 3 -- use the Vega-Lite API
+        vl.register(vega, vegaLite, {
+          view: {renderer: 'svg'} // can also pick 'canvas'
+        });
+
+        const lineChart = vl.markLine()
+          .data('data/stocks.csv')
+          .encode(
+            vl.x().fieldT('date'),
+            vl.y().fieldQ('price'),
+            vl.color().fieldN('symbol')
+          )
+          .render() // this returns a dom object asynchronously, so need to chain it with 'then' or need to use 'await'
+          .then(viewElement => {
+            document.getElementById('vis3').appendChild(viewElement);
+          });
     </script>
   </body>
 </html>
