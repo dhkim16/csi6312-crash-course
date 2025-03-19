@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>Vega-Lite Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
+  </head>
+  <body>
+    <!-- Container for the visualization -->
+    <div id="vis"></div>
+    <script>
+      // Method 1 -- directly include the spec within JS
+      var vlSpec = {
+        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+        "description": "Stock prices of 5 Tech Companies over Time.",
+        "data": {"url": "data/stocks.csv"},
+        "mark": "line",
+        "encoding": {
+          "x": {"field": "date", "type": "temporal"},
+          "y": {"field": "price", "type": "quantitative"},
+          "color": {"field": "symbol", "type": "nominal"}
+        }
+      };
+
+      // Simply use the vegaEmbed function!
+      vegaEmbed('#vis', vlSpec);
+    </script>
+
+
+    <div id="vis2"></div>
+    <script>
+      // Method 2 -- include the spec in a separate file
+      var vlSpec2 = "./chart.json";
+
+      // Simply use the vegaEmbed function!
+      vegaEmbed('#vis2', vlSpec2);
+    </script>
+  </body>
+</html>
