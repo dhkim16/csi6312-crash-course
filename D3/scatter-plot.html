@@ -1,0 +1,103 @@
+<html>
+    <head>
+        <style> /* CSS */ </style>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+
+        <!-- For Vega-Lite Comparison -->
+        <script src="https://cdn.jsdelivr.net/npm/vega@5.30.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.21.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.26.0"></script>
+    </head>
+    <body>
+        <svg id="plot1" width="550" height="550"></svg>
+        <script>
+            const locationData = [{x: 40, y: 20}, {x: 100, y: 200}, {x: 200, y: 300}];
+            const svg = d3.select('#plot1');
+
+            svg.selectAll('circle')
+                .data(locationData)
+                .enter()
+                .append('circle')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+                .attr('r', 20)
+                .style('fill', 'steelblue');
+        </script>
+
+
+        <svg id="plot2" width="600" height="600"></svg>
+        <script>
+            const plotHeight = 500;
+            const plotWidth = 500;
+            const plotMargin = 50;
+
+            const animalData = d3.csv("data/animals.csv", function(d) {
+                return {
+                    // We parse the data into an array of csv objects. We could for example change the names of fields.
+                    id: +d.id,
+                    animal: d.animal,   
+                    weight: +d.weight,
+                    height: +d.height,
+                    name: d.name
+                };
+            })
+            .then(function(animalData) {
+                // Data has been loaded!
+                // This is whee we will build our visualization
+
+                // Create the SVG element
+                const svg = d3.select('#plot2');
+
+                // Create the scales
+                const xScale = d3.scaleLinear()
+                    .domain([0, d3.max(animalData, d => d.weight)])
+                    .range([plotMargin, plotWidth + plotMargin]);
+
+                const yScale = d3.scaleLinear()
+                    .domain([0, d3.max(animalData, d => d.height)])
+                    .range([plotHeight + plotMargin, plotMargin]);
+
+                // Create the axes
+                svg.append('g')
+                    .attr('transform', `translate(0, ${plotHeight + plotMargin})`)
+                    .call(d3.axisBottom(xScale));
+                
+                svg.append('g')
+                    .attr('transform', `translate(${plotMargin}, 0)`)
+                    .call(d3.axisLeft(yScale));
+
+                // Create the axis labels
+                const xAxisLabel = svg.append("text")
+                    .attr("transform", `translate(${plotWidth / 2 + plotMargin}, ${plotHeight + plotMargin + 40})`)
+                    .style("text-anchor", "middle")
+                    .text("Weight");
+                
+                const yAxisLabel = svg.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("x", -plotHeight / 2)
+                    .attr("y", 0)
+                    .attr("dy", "1em")
+                    .style("text-anchor", "middle")
+                    .text("Height"); 
+
+                // Create the circles
+                svg.selectAll('circle')
+                    .data(animalData)
+                    .enter()
+                    .append('circle')
+                    .attr('cx', d => xScale(d.weight))
+                    .attr('cy', d => yScale(d.height))
+                    .attr('r', 15)
+                    .style('fill', d => d.animal === 'dog' ? 'steelblue' : 'firebrick')
+            });
+        </script>
+
+        <div id="vis"></div>
+        <script>
+            var vlSpec = "scatter-plot.json"
+
+            // Simply use the vegaEmbed function!
+            vegaEmbed('#vis', vlSpec);
+        </script>
+    </body>
+</html>

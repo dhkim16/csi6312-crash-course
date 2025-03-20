@@ -1,0 +1,15 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {"url": "data/animals.csv"},
+  "mark": "circle",
+  "encoding": {
+    "x": {"field": "weight", "type": "quantitative"},
+    "y": {"field": "height", "type": "quantitative"},
+    "color": {"field": "animal", "type": "nominal",
+      "scale": {
+        "domain": ["dog", "cat"],
+        "range": ["steelblue", "firebrick"]
+      }
+    }
+  }
+}

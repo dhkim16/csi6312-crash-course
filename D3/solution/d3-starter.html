@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <style> /* CSS */ </style>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+    </head>
+    <body>
+        <svg width="960" height="500">
+            <rect id='rect-green' x='50' y='20' width='30' height='50' style='fill: forestgreen;'/>
+            <rect id='rect-red' x='100' y='20' width='30' height='100' style='fill: firebrick;'/>
+        </svg>
+        <script>
+            // Get all the rectangles using .selectAll()
+            const rects = d3.selectAll('rect');
+
+            // Change the fill color of all rectangles
+            // rects.style('fill', 'steelblue');
+
+            // Select the green rectangle and the red rectangle
+            const greenRect = d3.select('#rect-green');
+            const redRect = d3.select('#rect-red');
+
+            // Move the green rectangle down to match the bottom of the red rectangle, with animation
+            const newYLocation = (+redRect.attr('y')) + (+redRect.attr('height')) - (+greenRect.attr('height')); // + converts string to number
+
+            greenRect.transition()
+                .duration(2000)
+                .attr('y', newYLocation);
+
+            // Add another rectangle
+            d3.select('svg')
+                .append('rect')
+                .attr('x', 150)
+                .attr('y', newYLocation)
+                .attr('width', 30)
+                .attr('height', 50)
+                .style('fill', 'orange');
+
+            // for the red rectangle, move it to the right whenever mouse hovers over it
+            redRect.on('mouseover', function() {
+                d3.select(this)
+                    .attr('x', +redRect.attr('x') + 20);
+            });
+        </script>
+    </body>
+</html>
