@@ -53,7 +53,8 @@
             vl.y().fieldQ('price'),
             vl.color().fieldN('symbol')
           )
-          .render() // this returns a dom object asynchronously, so need to chain it with 'then' or need to use 'await'
+          .render() 
+          // this returns a dom object asynchronously, so need to chain it with 'then' or need to use 'await'
           .then(viewElement => {
             document.getElementById('vis3').appendChild(viewElement);
           });
